@@ -9,6 +9,9 @@ This repository contains simple [makefile](./Makefile) to [dockerize](./Dockerfi
 make docker-image
 ```
 
+It is required to have [Foundry Virtual Tabletop] downloaded in this folder.
+The download link will be displayed on the console if needed.
+
 
 ## How to use dockerized version?
 
