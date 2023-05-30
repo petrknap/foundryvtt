@@ -21,6 +21,12 @@ make server-daemon # to run server as daemon
 make server-murder # to kill server
 ```
 
+For security reasons, please switch the server to HTTPS,
+set the SSL certificate and key paths in the application configuration.
+
+You can issue a self-signed certificate using the command `make certificate`.
+The certificate path will be `self-signed.crt` and key path will be `self-signed.key`.
+
 
 ---
 
