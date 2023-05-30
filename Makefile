@@ -19,7 +19,7 @@ certificate:
 			-newkey rsa \
 			-keyout $(mountedDataDir)/Config/self-signed.key \
 			-out $(mountedDataDir)/Config/self-signed.crt \
-			-subj /O=FoundryVTT/
+			-subj /O=$(imageName)/
 
 server:
 	docker run --rm \
