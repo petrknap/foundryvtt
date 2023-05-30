@@ -10,8 +10,6 @@ make docker-image
 ```
 
 
-
-
 ## How to use dockerized version?
 
 ```bash
