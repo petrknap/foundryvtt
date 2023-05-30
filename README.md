@@ -1,4 +1,4 @@
-# Dockerize [Foundry Virtual Tabletop]
+# Dockerized [Foundry Virtual Tabletop]
 
 This repository contains simple [makefile](./Makefile) to [dockerize](./Dockerfile) [Foundry Virtual Tabletop].
 

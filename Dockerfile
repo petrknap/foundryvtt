@@ -20,3 +20,8 @@ RUN unzip ${FOUNDRYVTT_TMP_FILE} -d ${FOUNDRYVTT_TMP_DIR} \
 HEALTHCHECK --interval=60s --timeout=3s --retries=3 CMD curl --fail http://localhost:30000/
 
 CMD ["node", "./main.js", "--dataPath=/mnt/data"]
+
+LABEL org.opencontainers.image.title="FoundryVTT" \
+      org.opencontainers.image.description="Dockerized Foundry Virtual Tabletop" \
+      org.opencontainers.image.authors="petrknap.github.io" \
+      org.opencontainers.image.url="https://github.com/petrknap/foundryvtt/" \
