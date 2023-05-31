@@ -1,25 +1,19 @@
+dockerfile := $(CURDIR)/Dockerfile
 imageName := foundryvtt
-imageTag := latest
-networkPort := 30000
+imageTag := $(subst ARG FOUNDRYVTT_VERSION=,,$(shell grep "ARG FOUNDRYVTT_VERSION=" $(dockerfile)))
+networkPort := $(subst EXPOSE ,,$(shell grep "EXPOSE " $(dockerfile)))
 dataDir := $(CURDIR)/data
-mountedDataDir := /mnt/data
-buildHelp := $(shell head -n 1 $(CURDIR)/Dockerfile)
+mountedDataDir := $(subst VOLUME ,,$(shell grep "VOLUME " $(dockerfile)))
+buildHelp := $(subst \# ,,$(shell head -n 1 $(dockerfile)))
 
-.PHONY: docker-image certificate server server-daemon server-murder
+.PHONY: docker-image server server-daemon server-murder certificate
 
 docker-image:
-	docker build $(CURDIR) -t $(imageName):$(imageTag) || echo "$(buildHelp)"
-
-certificate:
-	docker run --rm -v $(dataDir):$(mountedDataDir) $(imageName):$(imageTag) \
-		openssl req \
-			-x509 \
-			-nodes \
-			-days 36500 \
-			-newkey rsa \
-			-keyout $(mountedDataDir)/Config/self-signed.key \
-			-out $(mountedDataDir)/Config/self-signed.crt \
-			-subj /O=$(imageName)/
+	docker build $(CURDIR) \
+		-f $(dockerfile) \
+		-t $(imageName):$(imageTag) \
+		-t $(imageName):latest \
+	|| echo "$(buildHelp)"
 
 server:
 	docker run --rm \
@@ -27,10 +21,20 @@ server:
 		-p $(networkPort):$(networkPort) \
 		-v $(dataDir):$(mountedDataDir) \
 		$(DOCKER_EXTRA_ARGS) \
-		$(imageName):$(imageTag)
+		$(imageName):$(imageTag) \
+		$(DOCKER_CMD)
 
 server-daemon:
 	$(MAKE) server DOCKER_EXTRA_ARGS="-d $(DOCKER_EXTRA_ARGS)"
 
 server-murder:
-	docker stop $$(docker ps -q --filter ancestor=$(imageName):$(imageTag))
+	docker stop $$(docker ps -q --filter ancestor=$(imageName))
+
+certificate:
+	$(MAKE) server DOCKER_CMD="\
+		openssl req -newkey rsa -x509 -nodes \
+			-days 36500 \
+			-keyout $(mountedDataDir)/Config/self-signed.key \
+			-out $(mountedDataDir)/Config/self-signed.crt \
+			-subj /O=$(imageName)/ \
+	"
