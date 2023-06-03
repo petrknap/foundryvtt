@@ -6,7 +6,7 @@ dataDir := $(CURDIR)/data
 mountedDataDir := $(subst VOLUME ,,$(shell grep "VOLUME " $(dockerfile)))
 buildHelp := $(subst \# ,,$(shell head -n 1 $(dockerfile)))
 
-.PHONY: docker-image server server-daemon server-murder certificate
+.PHONY: docker-image .docker-run server server-daemon server-murder certificate
 
 docker-image:
 	docker build $(CURDIR) \
@@ -15,15 +15,17 @@ docker-image:
 		-t $(imageName):latest \
 	|| echo "$(buildHelp)"
 
-server:
+.docker-run:
 	docker run --rm \
 		-h $(imageName) \
-		-p $(networkPort):$(networkPort) \
 		-v $(dataDir):$(mountedDataDir) \
 		--security-opt seccomp:unconfined \
 		$(DOCKER_EXTRA_ARGS) \
 		$(imageName):$(imageTag) \
 		$(DOCKER_CMD)
+
+server:
+	$(MAKE) .docker-run DOCKER_EXTRA_ARGS="-p $(networkPort):$(networkPort) $(DOCKER_EXTRA_ARGS)"
 
 server-daemon:
 	$(MAKE) server DOCKER_EXTRA_ARGS="-d $(DOCKER_EXTRA_ARGS)"
@@ -32,7 +34,7 @@ server-murder:
 	docker stop $$(docker ps -q --filter ancestor=$(imageName))
 
 certificate:
-	$(MAKE) server DOCKER_CMD="\
+	$(MAKE) .docker-run DOCKER_CMD="\
 		openssl req -newkey rsa -x509 -nodes \
 			-days 36500 \
 			-keyout $(mountedDataDir)/Config/self-signed.key \
