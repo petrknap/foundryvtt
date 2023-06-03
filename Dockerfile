@@ -23,7 +23,7 @@ RUN unzip "${FOUNDRYVTT_FILE}" "resources/app/*" -d ./ \
  && rm "${FOUNDRYVTT_FILE}" \
 ;
 
-HEALTHCHECK --interval=30s --timeout=3s --retries=3 CMD curl --fail --insecure https://localhost:30000/ || curl --fail http://localhost:30000/
+HEALTHCHECK --interval=3m --timeout=3s --retries=3 CMD curl --fail --insecure https://localhost:30000/ || curl --fail http://localhost:30000/
 
 CMD ["node", "resources/app/main.js", "--dataPath=/mnt/data"]
 
