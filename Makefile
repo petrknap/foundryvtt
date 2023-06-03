@@ -20,6 +20,7 @@ server:
 		-h $(imageName) \
 		-p $(networkPort):$(networkPort) \
 		-v $(dataDir):$(mountedDataDir) \
+		--security-opt seccomp:unconfined \
 		$(DOCKER_EXTRA_ARGS) \
 		$(imageName):$(imageTag) \
 		$(DOCKER_CMD)
