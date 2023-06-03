@@ -1,5 +1,5 @@
-# Please, download file from https://foundryvtt.com/releases/download?build=299&platform=linux first.
-ARG FOUNDRYVTT_VERSION=11.299
+# Please, download file from https://foundryvtt.com/releases/download?build=300&platform=linux first.
+ARG FOUNDRYVTT_VERSION=11.300
 
 # See FOUNDRYVTT_FILE:/resources/app/package.json:release.node_version for correct node version.
 FROM node:16-alpine
