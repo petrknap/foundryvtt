@@ -2,15 +2,7 @@
 ARG FOUNDRYVTT_VERSION=11.300
 
 # See FOUNDRYVTT_FILE:/resources/app/package.json:release.node_version for correct node version.
-FROM node:16-alpine
-
-RUN sed -i 's/https:/http:/g' /etc/apk/repositories \
- && apk add --no-cache \
-    curl \
-    openssl \
-    unzip \
- && sed -i 's/http:/https:/g' /etc/apk/repositories \
-;
+FROM node:16
 
 WORKDIR "/FoundryVTT"
 VOLUME "/mnt/data"

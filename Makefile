@@ -19,7 +19,6 @@ docker-image:
 	docker run --rm \
 		-h $(imageName) \
 		-v $(dataDir):$(mountedDataDir) \
-		--security-opt seccomp:unconfined \
 		$(DOCKER_EXTRA_ARGS) \
 		$(imageName):$(imageTag) \
 		$(DOCKER_CMD)
