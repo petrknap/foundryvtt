@@ -6,7 +6,7 @@ dataDir := $(CURDIR)/data
 mountedDataDir := $(subst VOLUME ,,$(shell grep "VOLUME " $(dockerfile)))
 buildHelp := $(subst \# ,,$(shell head -n 1 $(dockerfile)))
 
-.PHONY: docker-image .docker-run server server-daemon server-murder certificate
+.PHONY: docker-image .docker-run server server-daemon server-murder certificate test
 
 docker-image:
 	docker build $(CURDIR) \
@@ -41,3 +41,13 @@ certificate:
 			-out $(mountedDataDir)/Config/self-signed.crt \
 			-subj /O=$(imageName)/ \
 	"
+
+test:
+	$(MAKE) docker-image
+	$(MAKE) certificate
+	$(MAKE) server &
+	sleep 30
+	$(MAKE) server-murder
+	$(MAKE) server-daemon
+	sleep 30
+	$(MAKE) server-murder
