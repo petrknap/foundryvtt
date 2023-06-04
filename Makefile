@@ -4,6 +4,8 @@ imageTag := $(subst ARG FOUNDRYVTT_VERSION=,,$(shell grep "ARG FOUNDRYVTT_VERSIO
 networkPort := $(subst EXPOSE ,,$(shell grep "EXPOSE " $(dockerfile)))
 dataDir := $(CURDIR)/data
 mountedDataDir := $(subst VOLUME ,,$(shell grep "VOLUME " $(dockerfile)))
+tempDir := $(CURDIR)/temp
+mountedTempDir := /tmp
 buildHelp := $(subst \# ,,$(shell head -n 1 $(dockerfile)))
 
 .PHONY: docker-image .docker-run server server-daemon server-murder certificate test
@@ -19,6 +21,7 @@ docker-image:
 	docker run --rm \
 		-h $(imageName) \
 		-v $(dataDir):$(mountedDataDir) \
+		-v $(tempDir):$(mountedTempDir) \
 		$(DOCKER_EXTRA_ARGS) \
 		$(imageName):$(imageTag) \
 		$(DOCKER_CMD)
