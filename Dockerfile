@@ -24,5 +24,5 @@ CMD ["node", "resources/app/main.js", "--dataPath=/mnt/data"]
 
 LABEL org.opencontainers.image.title="FoundryVTT" \
       org.opencontainers.image.description="Dockerized Foundry Virtual Tabletop" \
-      org.opencontainers.image.authors="petrknap.github.io" \
+      org.opencontainers.image.authors="Petr Knap <8299754+petrknap@users.noreply.github.com>" \
       org.opencontainers.image.url="https://github.com/petrknap/foundryvtt/" \
