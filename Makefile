@@ -6,9 +6,12 @@ dataDir := $(CURDIR)/data
 mountedDataDir := $(subst VOLUME ,,$(shell grep "VOLUME " $(dockerfile)))
 tempDir := $(CURDIR)/temp
 mountedTempDir := /tmp
+backupDir := $(CURDIR)/backups
+backupTemporaryFileBasename := backup.tar.gz
+newestBackupFile := $$(ls $(backupDir)/$(imageTag)_* | sort | tail -n 1)
 buildHelp := $(subst \# ,,$(shell head -n 1 $(dockerfile)))
 
-.PHONY: docker-image .docker-run server server-daemon server-murder certificate test
+.PHONY: docker-image .docker-run server server-daemon server-murder server-backup server-restore certificate test
 
 docker-image:
 	docker build $(CURDIR) \
@@ -35,6 +38,24 @@ server-daemon:
 server-murder:
 	docker stop $$(docker ps -q --filter ancestor=$(imageName))
 
+server-backup:
+	$(MAKE) .docker-run DOCKER_CMD="\
+		tar \
+			-czvf $(mountedTempDir)/$(backupTemporaryFileBasename) \
+			--directory=$(mountedDataDir) \
+			$$(echo $$(ls -A $(dataDir))) \
+	"
+	mv $(tempDir)/$(backupTemporaryFileBasename) $(backupDir)/$(imageTag)_$$(date +'%Y-%m-%d_%H-%M-%S').tar.gz
+
+server-restore:
+	echo -n "Restore '$(newestBackupFile)' file? [y/N] " && read ans && [ $${ans:-'N'} = 'y' ]
+	cp $(newestBackupFile) $(tempDir)/$(backupTemporaryFileBasename)
+	$(MAKE) .docker-run DOCKER_CMD="\
+		tar \
+			-xzvf $(mountedTempDir)/$(backupTemporaryFileBasename) \
+			--directory=$(mountedDataDir) \
+	"
+
 certificate:
 	$(MAKE) .docker-run DOCKER_CMD="\
 		openssl req -newkey rsa -x509 -nodes \
@@ -50,6 +71,8 @@ test:
 	$(MAKE) server &
 	sleep 30
 	$(MAKE) server-murder
+	$(MAKE) server-backup
+	$(MAKE) server-restore
 	$(MAKE) server-daemon
 	sleep 30
 	$(MAKE) server-murder
