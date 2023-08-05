@@ -28,6 +28,19 @@ You can issue a self-signed certificate using the command `make certificate`.
 The certificate path will be `self-signed.crt` and key path will be `self-signed.key`.
 
 
+## How to back up / restore it?
+
+It is recommended to **shut down the server** before backing up or restoring.
+
+```bash
+make server-backup  # to back up server
+make server-restore # to restore server
+```
+
+You can also back up the server manually by copying the `data` directory somewhere else.
+You can restore a manual backup by copying it back to the `data` directory.
+
+
 [Foundry Virtual Tabletop]:https://foundryvtt.com/
 
 ---
