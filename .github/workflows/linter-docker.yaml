@@ -1,0 +1,15 @@
+name: Docker Linter
+
+on:
+  pull_request:
+    paths:
+      - 'Dockerfile'
+
+jobs:
+  HaskellDockerfileLinter:
+    runs-on: ubuntu-latest
+    container:
+      image: hadolint/hadolint:latest-alpine
+    steps:
+      - uses: actions/checkout@v3
+      - run: hadolint Dockerfile

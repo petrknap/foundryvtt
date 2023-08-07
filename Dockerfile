@@ -10,7 +10,8 @@ EXPOSE 30000
 
 ARG FOUNDRYVTT_VERSION
 ARG FOUNDRYVTT_FILE="FoundryVTT-${FOUNDRYVTT_VERSION}.zip"
-ADD "${FOUNDRYVTT_FILE}" "${FOUNDRYVTT_FILE}"
+COPY "${FOUNDRYVTT_FILE}" "${FOUNDRYVTT_FILE}"
+# hadolint ignore=DL3003
 RUN unzip "${FOUNDRYVTT_FILE}" "resources/app/*" -d ./ \
  && rm "${FOUNDRYVTT_FILE}" \
  && cd "resources/app" \
