@@ -1,8 +1,8 @@
-# Please, download file from https://foundryvtt.com/releases/download?build=315&platform=linux first.
-ARG FOUNDRYVTT_VERSION=11.315
+# Please, download file from https://foundryvtt.com/releases/download?build=324&platform=linux first.
+ARG FOUNDRYVTT_VERSION=12.324
 
 # See FOUNDRYVTT_FILE:/resources/app/package.json:release.node_version for correct node version.
-FROM node:16
+FROM node:18
 
 WORKDIR "/FoundryVTT"
 VOLUME "/mnt/data"
