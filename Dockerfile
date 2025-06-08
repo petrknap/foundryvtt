@@ -1,15 +1,17 @@
 # Please, download file from https://foundryvtt.com/releases/download?build=341&platform=linux first.
 ARG FOUNDRYVTT_VERSION=13.341
+ARG FOUNDRYVTT_FILE="FoundryVTT-Linux-${FOUNDRYVTT_VERSION}.zip"
 
 # See FOUNDRYVTT_FILE:/resources/app/package.json:release.node_version for correct node version.
 FROM node:20
+
+ARG FOUNDRYVTT_VERSION
+ARG FOUNDRYVTT_FILE
 
 WORKDIR "/FoundryVTT"
 VOLUME "/mnt/data"
 EXPOSE 30000
 
-ARG FOUNDRYVTT_VERSION
-ARG FOUNDRYVTT_FILE="FoundryVTT-Linux-${FOUNDRYVTT_VERSION}.zip"
 COPY "${FOUNDRYVTT_FILE}" "${FOUNDRYVTT_FILE}"
 # hadolint ignore=DL3003
 RUN unzip "${FOUNDRYVTT_FILE}" "resources/app/*" -d ./ \
