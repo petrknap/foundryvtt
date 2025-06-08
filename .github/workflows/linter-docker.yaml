@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'Dockerfile'
+      - '**/Dockerfile'
+      - '**.dockerfile'
 
 jobs:
   HaskellDockerfileLinter:
@@ -12,4 +14,4 @@ jobs:
       image: hadolint/hadolint:latest-alpine
     steps:
       - uses: actions/checkout@v3
-      - run: hadolint Dockerfile
+      - run: find . -name 'Dockerfile' -or -name '*.dockerfile' | xargs -trn 1 hadolint
