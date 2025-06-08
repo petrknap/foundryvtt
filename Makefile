@@ -70,9 +70,11 @@ test:
 	$(MAKE) certificate
 	$(MAKE) server &
 	sleep 30
+	curl --fail http://127.0.0.1:30000/
 	$(MAKE) server-murder
 	$(MAKE) server-backup
 	$(MAKE) server-restore
 	$(MAKE) server-daemon
 	sleep 30
+	curl --fail http://127.0.0.1:30000/
 	$(MAKE) server-murder
